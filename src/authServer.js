@@ -26,6 +26,10 @@ const refreshTokens = new Schema(
 );
 const REFRESH_TOKENS = mongoose.model("Tokens", refreshTokens);
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
 const generateAccessToken = (userCred) => {
   return jwt.sign(userCred, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "45m",
