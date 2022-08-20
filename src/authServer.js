@@ -98,6 +98,6 @@ app.post("/api/logout/", async (req, res) => {
       res.send({ ststus: "no", data: e });
     });
 });
-app.listen(4000, (err) =>
+app.listen(PORT, (err) =>
   console.log(`server ${err ? " on" : "listening"} port` + PORT)
 );
