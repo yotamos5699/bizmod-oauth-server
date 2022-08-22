@@ -1,14 +1,15 @@
 //  **************** OAUTH SERVER ****************
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const PORT = process.env.PORT || 4000;
-require("dotenv").config();
 const express = require("express");
 const Helper = require("./Helper");
 const app = express();
 const jwt = require("jsonwebtoken");
 const uri =
   "mongodb+srv://yotamos:linux6926@cluster0.zj6wiy3.mongodb.net/mtxlog?retryWrites=true&w=majority";
+require("dotenv").config();
 const MGoptions = { useNewUrlParser: true, useUnifiedTopology: true };
 app.use(express.json());
 mongoose
@@ -31,9 +32,9 @@ app.get("/", (req, res) => {
 });
 
 const generateAccessToken = (userCred) => {
-  return jwt.sign(userCred, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "45m",
-  });
+  console.log("user Cred !!!!", userCred);
+  console.log(process.env.ACCESS_TOKEN_SECRET);
+  return jwt.sign(userCred, process.env.ACCESS_TOKEN_SECRET);
 };
 
 app.post("/api/login", async (req, res) => {
@@ -47,7 +48,7 @@ app.post("/api/login", async (req, res) => {
     userCred,
     "/api/handleLogin"
   );
-  console.log("asdasda", userCred);
+  console.log("asdasda", fetchedData);
   if (fetchedData.status != "yes") return res.send(fetchedData);
   console.log(fetchedData);
   const accessToken = generateAccessToken({ fetchedData });
