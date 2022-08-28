@@ -10,6 +10,7 @@ const jwt = require("jsonwebtoken");
 const uri =
   "mongodb+srv://yotamos:linux6926@cluster0.zj6wiy3.mongodb.net/mtxlog?retryWrites=true&w=majority";
 require("dotenv").config();
+const Time = 10 * 60;
 const MGoptions = { useNewUrlParser: true, useUnifiedTopology: true };
 app.use(express.json());
 mongoose
@@ -60,7 +61,11 @@ app.post("/api/login", async (req, res) => {
       console.log(result);
       res.send({
         status: "yes",
-        data: { accessToken: accessToken, refreshToken: refreshToken },
+        data: {
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          timeLimit: Time,
+        },
       });
     })
     .catch((e) => {
@@ -86,7 +91,7 @@ app.post("/api/refreshtoken", async (req, res) => {
       if (err) return res.sendStatus(403);
       console.log("user data DDD", userData);
       const accessToken = generateAccessToken(userData);
-      res.json({ accessToken: accessToken });
+      res.json({ accessToken: accessToken, timeLimit: Time });
     }
   );
 });
