@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 4000;
 const express = require("express");
 const Helper = require("./Helper");
 const app = express();
+const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const uri =
   "mongodb+srv://yotamos:linux6926@cluster0.zj6wiy3.mongodb.net/mtxlog?retryWrites=true&w=majority";
@@ -13,6 +14,12 @@ require("dotenv").config();
 const Time = 10 * 60;
 const MGoptions = { useNewUrlParser: true, useUnifiedTopology: true };
 app.use(express.json());
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
 mongoose
   .connect(uri, MGoptions)
   .then((res) => console.log("conected to mongo...."))
