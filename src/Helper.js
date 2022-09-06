@@ -5,6 +5,7 @@ const checkLoginAndReturnData = async (userObj, reqUrl) => {
   let options = {
     url: `${dbUrl}${reqUrl}`,
     method: "POST",
+    mode:"no-cors",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
     },
