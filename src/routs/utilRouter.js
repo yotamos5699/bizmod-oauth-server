@@ -4,7 +4,7 @@ const UTrouter = express.Router();
 const getCred = require("../../Helpers/wizCloudUtiles/helpers/getCred");
 const cors = require("cors");
 
-app.use(
+UTrouter.use(
   cors({
     origin: "*",
   })
