@@ -52,10 +52,16 @@ app.post("/api/login", async (req, res) => {
   // if not send to config page
 
   const userCred = await req.body;
-  const fetchedData = await Helper.checkLoginAndReturnData(
-    userCred,
-    "/api/handleLogin"
-  );
+
+  let fetchedData;
+  try {
+    fetchedData = await Helper.checkLoginAndReturnData(
+      userCred,
+      "/api/handleLogin"
+    );
+  } catch (e) {
+    console.log(e);
+  }
   console.log("asdasda", fetchedData);
   if (fetchedData.status != "yes") return res.send(fetchedData);
   console.log(fetchedData);
