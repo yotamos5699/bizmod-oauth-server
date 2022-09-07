@@ -51,7 +51,13 @@ app.post("/api/login", async (req, res) => {
   // if true return the related config file if exists
   // if not send to config page
 
-  const userCred = await req.body;
+  let userCred;
+  try {
+    userCred = await req.body;
+  } catch (e) {
+    console.log(e);
+    return res.send(e);
+  }
 
   let fetchedData;
   try {

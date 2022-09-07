@@ -1,6 +1,8 @@
 const axios = require("axios");
 const DBport =
-  process.env.DBport || "https://bizmod-db-server.herokuapp.com" ||  "http://localhost:5000";
+  process.env.DBport ||
+  "https://bizmod-db-server.herokuapp.com" ||
+  "http://localhost:5000";
 const checkLoginAndReturnData = async (userObj, reqUrl) => {
   let options = {
     url: `${DBport}${reqUrl}`,
@@ -12,10 +14,15 @@ const checkLoginAndReturnData = async (userObj, reqUrl) => {
     data: userObj,
   };
   console.log(options);
-  return axios(options).then((result) => {
-    console.log("result  df", result.data);
-    return result.data;
-  });
+  return axios(options)
+    .then((result) => {
+      console.log("result  df", result.data);
+      return result.data;
+    })
+    .catch((err) => {
+      console.log(err);
+      return err;
+    });
 };
 
 module.exports.checkLoginAndReturnData = checkLoginAndReturnData;
