@@ -69,27 +69,30 @@ app.post("/api/login", async (req, res) => {
     console.log(e);
   }
   console.log("asdasda", fetchedData);
-  if (fetchedData.status != "yes") return res.send(fetchedData);
+  if (fetchedData.status != "yes")
+    return res.send({ status: "no", data: fetchedData });
   console.log(fetchedData);
   const accessToken = generateAccessToken({ fetchedData });
   const refreshToken = jwt.sign(fetchedData, process.env.REFRESH_TOKEN_SECRET);
   let token = new REFRESH_TOKENS({ refreshToken: refreshToken });
+  // send before save
+  res.send({
+    status: "yes",
+    data: {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      timeLimit: Time,
+    },
+  });
+
   token
     .save()
-    .then((result) => {
-      console.log(result);
-      res.send({
-        status: "yes",
-        data: {
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-          timeLimit: Time,
-        },
-      });
+    .then((ON_SUCCUSS_RESULT) => {
+      console.log({ ON_SUCCUSS_RESULT });
     })
-    .catch((e) => {
-      console.log(e);
-      res.send({ status: "no", data: e });
+    .catch((error) => {
+      console.log({ error });
+      // res.send({ status: "no", data: e });
     });
 });
 
@@ -124,5 +127,5 @@ app.post("/api/logout/", async (req, res) => {
     });
 });
 app.listen(PORT, (err) =>
-  console.log(`server ${err ? " on" : "listening"} port` + PORT)
+  console.log(`oauth server ${err ? " on" : "listening"} port ${PORT} `)
 );
