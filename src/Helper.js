@@ -1,10 +1,12 @@
 const axios = require("axios");
 const DBport = process.env.DBport || "http://localhost:4000";
+
+console.log(DBport);
 const checkLoginAndReturnData = async (userObj, reqUrl) => {
   let options = {
     url: `${DBport}${reqUrl}`,
     method: "POST",
-    //mode: "no-cors",
+    mode: "no-cors",
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
     },
