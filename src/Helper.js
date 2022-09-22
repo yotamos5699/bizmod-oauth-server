@@ -26,5 +26,5 @@ const checkLoginAndReturnData = async (userObj, reqUrl) => {
       return err;
     });
 };
-
+//sd
 module.exports.checkLoginAndReturnData = checkLoginAndReturnData;
