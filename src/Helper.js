@@ -1,5 +1,8 @@
 const axios = require("axios");
-const DBport = process.env.DBport || "http://localhost:4000";
+const DBport =
+  "https://bizmod-db-server.herokuapp.com" ||
+  process.env.DBport ||
+  "http://localhost:4000";
 
 console.log(DBport);
 const checkLoginAndReturnData = async (userObj, reqUrl) => {
