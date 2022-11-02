@@ -76,6 +76,8 @@ app.post("/api/login", async (req, res) => {
   const refreshToken = jwt.sign(fetchedData, process.env.REFRESH_TOKEN_SECRET);
   let token = new REFRESH_TOKENS({ refreshToken: refreshToken });
   // send before save
+  res.setHeader("permissions", fetchedData.configObj);
+
   res.send({
     status: "yes",
     data: {
