@@ -76,7 +76,12 @@ app.post("/api/login", async (req, res) => {
   const refreshToken = jwt.sign(fetchedData, process.env.REFRESH_TOKEN_SECRET);
   let token = new REFRESH_TOKENS({ refreshToken: refreshToken });
   // send before save
-  res.setHeader("permissions", fetchedData.configObj);
+  // let yy = fetchedData.configObj;
+  // let prem = JSON.stringify({ yy });
+  // console.log("aaaaaaaaaaaaaaaaaaa", prem.toString());
+
+  // res.setHeader("SSS", `'${JSON.stringify(yy)}'`);
+  // //res.set("permissions", prem.toString());
 
   res.send({
     status: "yes",
@@ -84,6 +89,7 @@ app.post("/api/login", async (req, res) => {
       accessToken: accessToken,
       refreshToken: refreshToken,
       timeLimit: Time,
+      userConfig: fetchedData.configObj,
     },
   });
 
