@@ -8,8 +8,7 @@ const Helper = require("./Helper");
 const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const uri =
-  "mongodb+srv://yotamos:linux6926@cluster0.zj6wiy3.mongodb.net/mtxlog?retryWrites=true&w=majority";
+const uri = "mongodb+srv://yotamos:linux6926@cluster0.zj6wiy3.mongodb.net/mtxlog?retryWrites=true&w=majority";
 require("dotenv").config();
 const Time = 10 * 60;
 const MGoptions = { useNewUrlParser: true, useUnifiedTopology: true };
@@ -61,16 +60,12 @@ app.post("/api/login", async (req, res) => {
 
   let fetchedData;
   try {
-    fetchedData = await Helper.checkLoginAndReturnData(
-      userCred,
-      "/api/handleLogin"
-    );
+    fetchedData = await Helper.checkLoginAndReturnData(userCred, "/api/handleLogin");
   } catch (e) {
     console.log(e);
   }
   console.log("asdasda", fetchedData);
-  if (fetchedData.status != "yes")
-    return res.send({ status: "no", data: fetchedData });
+  if (fetchedData.status != "yes") return res.send({ status: "no", data: fetchedData });
   console.log(fetchedData);
   const accessToken = generateAccessToken({ fetchedData });
   const refreshToken = jwt.sign(fetchedData, process.env.REFRESH_TOKEN_SECRET);
@@ -114,16 +109,12 @@ app.post("/api/refreshtoken", async (req, res) => {
   if (searchedRefreshTokens.length == 0) return res.sendStatus(401);
   //  return res.sendStatus(403);
 
-  jwt.verify(
-    refreshToken,
-    process.env.REFRESH_TOKEN_SECRET,
-    (err, userData) => {
-      if (err) return res.sendStatus(403);
-      console.log("user data DDD", userData);
-      const accessToken = generateAccessToken(userData);
-      res.json({ accessToken: accessToken, timeLimit: Time });
-    }
-  );
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, userData) => {
+    if (err) return res.sendStatus(403);
+    console.log("user data DDD", userData);
+    const accessToken = generateAccessToken(userData);
+    res.json({ accessToken: accessToken, timeLimit: Time });
+  });
 });
 
 app.post("/api/logout/", async (req, res) => {
@@ -134,6 +125,4 @@ app.post("/api/logout/", async (req, res) => {
       res.send({ ststus: "no", data: e });
     });
 });
-app.listen(PORT, (err) =>
-  console.log(`oauth server ${err ? " on" : "listening"} port ${PORT} `)
-);
+app.listen(PORT, (err) => console.log(`oauth server ${err ? " on" : "listening"} port ${PORT} `));
