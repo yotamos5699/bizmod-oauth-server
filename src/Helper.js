@@ -1,5 +1,5 @@
 const axios = require("axios");
-const DBport = "https://bizmod-db-server.herokuapp.com" || process.env.DBport;
+const DBport = "https://bizmod-oauth-server.onrender.com" || process.env.DBport;
 // "http://localhost:4000";
 
 console.log(DBport);
