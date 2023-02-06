@@ -1,6 +1,19 @@
 const axios = require("axios");
 const DBport = "https://bizmod-database-server.onrender.com" || process.env.DBport;
 // "http://localhost:4000";
+const getUserConfig = async (accessToken, reqUrl) => {
+  console.log(`the url ${DBport}${reqUrl}`);
+  let options = {
+    url: `${DBport}${reqUrl}`,
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=UTF-8",
+      Authorization: "Bearer " + accessToken,
+    },
+    data: { collection: "Config" },
+  };
+  return await axios(options).then((res) => res.data);
+};
 
 console.log(DBport);
 const checkLoginAndReturnData = async (userObj, reqUrl) => {
@@ -25,4 +38,5 @@ const checkLoginAndReturnData = async (userObj, reqUrl) => {
     });
 };
 //sd
+module.exports.getUserConfig = getUserConfig;
 module.exports.checkLoginAndReturnData = checkLoginAndReturnData;

@@ -77,14 +77,16 @@ app.post("/api/login", async (req, res) => {
 
   // res.setHeader("SSS", `'${JSON.stringify(yy)}'`);
   // //res.set("permissions", prem.toString());
-
+  const configObject = await Helper.getUserConfig(accessToken, "/api/getdata");
+  console.log({ configObject });
+  const secueredConfigObject = { ...configObject, ErpConfig: "******* ok *******" };
   res.send({
     status: "yes",
     data: {
       accessToken: accessToken,
       refreshToken: refreshToken,
       timeLimit: Time,
-      userConfig: fetchedData.configObj,
+      userConfig: secueredConfigObject ?? "no config object exist",
     },
   });
 
