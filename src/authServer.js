@@ -66,7 +66,7 @@ app.post("/api/login", async (req, res) => {
   }
   console.log("asdasda", fetchedData);
   if (fetchedData.status != "yes") return res.send({ status: "no", data: fetchedData });
-  console.log(fetchedData);
+  console.log({ fetchedData });
   const accessToken = generateAccessToken({ fetchedData });
   const refreshToken = jwt.sign(fetchedData, process.env.REFRESH_TOKEN_SECRET);
   let token = new REFRESH_TOKENS({ refreshToken: refreshToken });
@@ -130,7 +130,8 @@ app.post("/api/refreshtoken", async (req, res) => {
   jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, userData) => {
     if (err) return res.sendStatus(403);
     console.log("user data DDD", userData);
-    const accessToken = generateAccessToken(userData);
+    console.log({ userData });
+    const accessToken = generateAccessToken({ userData });
     const configObject = fetchConfig ? await Helper.getUserConfig(accessToken, "/api/getdata") : null;
     res.json({ accessToken: accessToken, userConfig: configObject, timeLimit: Time });
   });
