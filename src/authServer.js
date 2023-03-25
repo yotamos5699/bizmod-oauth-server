@@ -101,9 +101,25 @@ app.post("/api/login", async (req, res) => {
     });
 });
 
+app.post("/api/configobject", async (req, res) => {
+  const accessToken = await req?.body?.accessToken;
+  if (!accessToken) return res.sendStatus(401);
+
+  const configObject = await Helper.getUserConfig(accessToken, "/api/getdata");
+
+  res.send({
+    status: "yes",
+    data: {
+      userConfig: { ...configObject } ?? "no config object exist",
+    },
+  });
+});
+
 app.post("/api/refreshtoken", async (req, res) => {
-  const refreshToken = req.body.token;
-  if (refreshToken == null) return res.sendStatus(401);
+  const Body = await req.body;
+  const refreshToken = Body?.refreshToken;
+  const fetchConfig = Body?.fetchConfig;
+  if (!refreshToken) return res.sendStatus(401);
 
   let searchedRefreshTokens = await REFRESH_TOKENS.find({
     refreshToken: refreshToken,
@@ -111,11 +127,12 @@ app.post("/api/refreshtoken", async (req, res) => {
   if (searchedRefreshTokens.length == 0) return res.sendStatus(401);
   //  return res.sendStatus(403);
 
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, userData) => {
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, userData) => {
     if (err) return res.sendStatus(403);
     console.log("user data DDD", userData);
     const accessToken = generateAccessToken(userData);
-    res.json({ accessToken: accessToken, timeLimit: Time });
+    const configObject = fetchConfig ? await Helper.getUserConfig(accessToken, "/api/getdata") : null;
+    res.json({ accessToken: accessToken, userConfig: configObject, timeLimit: Time });
   });
 });
 
