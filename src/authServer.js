@@ -117,7 +117,7 @@ app.post("/api/configobject", async (req, res) => {
 
 app.post("/api/refreshtoken", async (req, res) => {
   const Body = await req.body;
-  const refreshToken = Body?.refreshToken;
+  const refreshToken = Body?.token;
   const fetchConfig = Body?.fetchConfig;
   if (!refreshToken) return res.sendStatus(401);
 
