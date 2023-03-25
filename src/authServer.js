@@ -127,13 +127,13 @@ app.post("/api/refreshtoken", async (req, res) => {
   if (searchedRefreshTokens.length == 0) return res.sendStatus(401);
   //  return res.sendStatus(403);
 
-  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, userData) => {
+  jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, fetchedData) => {
     if (err) return res.sendStatus(403);
-    console.log("user data DDD", userData);
-    console.log({ userData });
-    const accessToken = generateAccessToken({ userData });
+    console.log("user data DDD", fetchedData);
+    console.log({ fetchedData });
+    const accessToken = generateAccessToken({ fetchedData });
     const configObject = fetchConfig ? await Helper.getUserConfig(accessToken, "/api/getdata") : null;
-    res.json({ accessToken: accessToken, userConfig: configObject, timeLimit: Time });
+    res.json({ accessToken: accessToken, userConfig: configObject ? configObject : fetchedData ?? null, timeLimit: Time });
   });
 });
 
@@ -146,3 +146,40 @@ app.post("/api/logout/", async (req, res) => {
     });
 });
 app.listen(PORT, (err) => console.log(`oauth server ${err ? " on" : "listening"} port ${PORT} `));
+
+// userData: {
+//   status: 'yes',
+//   configObj: {
+//     ModulsPremission: [Object],
+//     mtxConfig: [Object],
+//     Reports: [Object],
+//     ErpConfig: [Object],
+//     _id: '63711f7c2ace1523371c0cc5',
+//     userID: '62fd0ceeedbc87baf3979757',
+//     AccountState: 'active',
+//     createdAt: '2022-11-13T16:46:52.249Z',
+//     updatedAt: '2023-03-23T17:23:17.264Z',
+//     __v: 0
+//   },
+//   userID: '62fd0ceeedbc87baf3979757',
+//   iat: 1679746893
+// }
+// }
+
+// fetchedData: {
+//   status: 'yes',
+//   configObj: {
+//     ModulsPremission: [Object],
+//     mtxConfig: [Object],
+//     Reports: [Object],
+//     ErpConfig: [Object],
+//     _id: '63711f7c2ace1523371c0cc5',
+//     userID: '62fd0ceeedbc87baf3979757',
+//     AccountState: 'active',
+//     createdAt: '2022-11-13T16:46:52.249Z',
+//     updatedAt: '2023-03-23T17:23:17.264Z',
+//     __v: 0
+//   },
+//   userID: '62fd0ceeedbc87baf3979757'
+// }
+// }
