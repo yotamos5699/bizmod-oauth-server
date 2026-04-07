@@ -157,7 +157,7 @@ app.post("/api/logout/", async (req, res) => {
       res.send({ ststus: "no", data: e });
     });
 });
-const server = app.listen(PORT, () =>
+const server = app.listen(PORT, "0.0.0.0", () =>
   console.log(`oauth server listening port ${PORT} `),
 );
 
