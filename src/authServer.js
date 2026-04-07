@@ -23,6 +23,7 @@ app.use(
   }),
 );
 
+console.log("[MONGOOS URI]", uri);
 mongoose.set("strictQuery", false);
 
 mongoose
