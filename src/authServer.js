@@ -1,5 +1,7 @@
 //  **************** OAUTH SERVER ****************
 
+require("dotenv").config();
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const PORT = process.env.PORT || 5000;
@@ -8,21 +10,25 @@ const Helper = require("./Helper");
 const app = express();
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
-const uri = "mongodb+srv://yotamos:linux6926@cluster0.zj6wiy3.mongodb.net/mtxlog?retryWrites=true&w=majority";
-require("dotenv").config();
+
+const MONGOOSE_URI =
+  "mongodb+srv://matrix:linux6926@main.tybk4aa.mongodb.net/?appName=main";
+const uri = process.env.MONGO_URI || MONGOOSE_URI;
+// "mongodb+srv://yotamos:linux6926@cluster0.zj6wiy3.mongodb.net/mtxlog?retryWrites=true&w=majority";
 const Time = 10 * 60;
-const MGoptions = { useNewUrlParser: true, useUnifiedTopology: true };
 app.use(express.json());
 app.use(
   cors({
     origin: "*",
-  })
+  }),
 );
 
+mongoose.set("strictQuery", false);
+
 mongoose
-  .connect(uri, MGoptions)
-  .then((res) => console.log("conected to mongo...."))
-  .catch((e) => console.log(e));
+  .connect(uri)
+  .then(() => console.log("connected to mongo...."))
+  .catch((e) => console.error("MongoDB connection failed:", e.message));
 
 const refreshTokens = new Schema(
   {
@@ -30,7 +36,7 @@ const refreshTokens = new Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 const REFRESH_TOKENS = mongoose.model("Tokens", refreshTokens);
 
@@ -132,8 +138,14 @@ app.post("/api/refreshtoken", async (req, res) => {
     console.log("user data DDD", fetchedData);
     console.log({ fetchedData });
     const accessToken = generateAccessToken({ fetchedData });
-    const configObject = fetchConfig ? await Helper.getUserConfig(accessToken, "/api/getdata") : null;
-    res.json({ accessToken: accessToken, userConfig: configObject ? configObject : fetchedData ?? null, timeLimit: Time });
+    const configObject = fetchConfig
+      ? await Helper.getUserConfig(accessToken, "/api/getdata")
+      : null;
+    res.json({
+      accessToken: accessToken,
+      userConfig: configObject ? configObject : (fetchedData ?? null),
+      timeLimit: Time,
+    });
   });
 });
 
@@ -145,7 +157,18 @@ app.post("/api/logout/", async (req, res) => {
       res.send({ ststus: "no", data: e });
     });
 });
-app.listen(PORT, (err) => console.log(`oauth server ${err ? " on" : "listening"} port ${PORT} `));
+const server = app.listen(PORT, () =>
+  console.log(`oauth server listening port ${PORT} `),
+);
+
+server.on("error", (error) => {
+  if (error.code === "EADDRINUSE") {
+    console.error(`Port ${PORT} is already in use.`);
+    return;
+  }
+
+  console.error("Server failed to start:", error);
+});
 
 // userData: {
 //   status: 'yes',
